@@ -30,7 +30,7 @@ void PS2_Init(SPI_HandleTypeDef spi)
 }
 void PS2_Cmd(uint8_t CMD)
 {
-    HAL_SPI_Transmit(&PS2_spi,&CMD,sizeof(CMD),5);
+    HAL_SPI_Transmit(&hspi1,&CMD,sizeof(CMD),5);
 	public.HAL_delay_us(16);
 }
 /*****************************************************
@@ -45,9 +45,9 @@ void PS2_Cmd(uint8_t CMD)
 *****************************************************/
 uint8_t PS2_RedLight(void)
 {
-    HAL_SPI_TransmitReceive(&PS2_spi,&Comd[0],&Data[0],1,10);
+    HAL_SPI_TransmitReceive(&hspi1,&Comd[0],&Data[0],1,10);
     HAL_Delay(1);
-    HAL_SPI_TransmitReceive(&PS2_spi,&Comd[1],&Data[1],1,10);
+    HAL_SPI_TransmitReceive(&hspi1,&Comd[1],&Data[1],1,10);
     if( Data[1] == 0X73)
         return 0 ;
     else
@@ -65,13 +65,13 @@ uint8_t PS2_RedLight(void)
 void PS2_ReadData(void)
 {
     CS_L;
-    HAL_SPI_TransmitReceive(&PS2_spi,&Comd[0],&Data[0],1,10);
+    HAL_SPI_TransmitReceive(&hspi1,&Comd[0],&Data[0],1,10);
     HAL_Delay(1);
-    HAL_SPI_TransmitReceive(&PS2_spi,&Comd[1],&Data[1],1,10);
+    HAL_SPI_TransmitReceive(&hspi1,&Comd[1],&Data[1],1,10);
     HAL_Delay(1);
 //    HAL_SPI_TransmitReceive(&PS2_spi,&Comd[2],&Data[2],7,100);
     for(int i=2;i<9;i++) {
-        HAL_SPI_Receive_DMA(&PS2_spi, &Data[i], 1);
+        HAL_SPI_Receive_DMA(&hspi1, &Data[i], 1);
     HAL_Delay(1);
     }
     CS_H;
